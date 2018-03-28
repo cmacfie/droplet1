@@ -25,10 +25,14 @@ $(function () {
 
     var loggedIn = false;
 
+    var justLoggedIn = true;
+
     var colors = [];
     var lastTarget;
 
     var shuffledQuestion = '';
+
+
 
     socket.emit('get colors');
 
@@ -154,6 +158,14 @@ $(function () {
         }
     });
 
+    socket.on('get question', function(data){
+        console.log("hej");
+       if(justLoggedIn){
+           console.log("hej2");
+           justLoggedIn = false;
+           $question.html(data);
+       }
+    });
 
     //User Login
     $(document).on('click', '#loginButton', function(e){
@@ -166,6 +178,7 @@ $(function () {
                     $userFormArea.hide();
                     $questionArea.show();
                     loggedIn = true;
+                    socket.emit('get question');
                 }
             });
             $username.val('');

@@ -1,5 +1,6 @@
 var express = require('express');
 var path = require('path');
+var NoSleep = require('nosleep.js');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
@@ -14,10 +15,12 @@ colors = [['rgba(255,0,0,0.7)', '#fff'], ['rgba(255,199,0,0.7)', '#fff'], ['rgba
 usedColors = [];
 questions = [];
 questionsCounter = 0;
+currentQuestion = '';
+
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/css', express.static(path.join(__dirname, 'public/css')));
-app.use('/css', express.static(path.join(__dirname, 'public/js')));
+app.use('/js', express.static(path.join(__dirname, 'public/js')));
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
 app.get('/', function (req, res) {
@@ -66,7 +69,12 @@ io.sockets.on('connection', function (socket) {
     //Use Question
     socket.on('use question', function (data) {
         resetVotes();
+        currentQuestion = data;
         io.sockets.emit('new question', data);
+    });
+
+    socket.on('get question', function(data){
+        io.sockets.emit('get question', currentQuestion);
     });
 
     function getIndex(array, comp){
