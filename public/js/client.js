@@ -160,6 +160,7 @@ $(function () {
             e.preventDefault();
             username = $username.val();
             socket.emit('new user', $username.val(), color, function (data) {
+                console.log(color);
                 if (data) {
                     $userFormArea.hide();
                     $questionArea.show();

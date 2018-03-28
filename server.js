@@ -71,13 +71,23 @@ io.sockets.on('connection', function (socket) {
         io.sockets.emit('new question', data);
     });
 
+    function getIndex(array, comp){
+        for(i = 0; i < array.length; i++){
+            if(array[i][0] == comp){
+                return i;
+            }
+        }
+        return -1;
+    }
+
     // New User
     socket.on('new user', function (username, color, callback) {
         callback(true);
         socket.username = username;
         users.push(socket.username);
         usedColors.push(color);
-        var index = colors.indexOf(color);
+        var index = getIndex(colors, color[0]);
+        console.log(index);
         colors.splice(index, 1);
         nbrs.push([socket.username, counter]);
         votes.push(0);
