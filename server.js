@@ -1,6 +1,5 @@
 var express = require('express');
 var path = require('path');
-var NoSleep = require('nosleep.js');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
