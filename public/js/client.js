@@ -37,7 +37,7 @@ $(function () {
         colors = data;
         var html = '<ul>';
         for (var i = 0; i < data.length; i++) {
-            html += '<li class="colorSquare"'
+            html += '<li type="button" class="colorSquare"'
             html += 'style="background-color:' + data[i][0] +'; color:"'+data[i][1]+ '"';
             html += '></li>'
         }
