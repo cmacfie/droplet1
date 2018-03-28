@@ -45,6 +45,7 @@ $(function () {
             color = '';
         }
         html += '</ul>';
+        $('#loadingColors').hide();
         $colorHolder.html(html);
     });
 
