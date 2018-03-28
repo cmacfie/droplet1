@@ -36,7 +36,7 @@ app.get('/', function (req, res) {
     res.redirect('haveQuestions.txt');
 });
 
-server.listen(process.env.PORT || 3000);
+server.listen(process.env.PORT || 80);
 console.log('Server running...');
 
 app.use("/public", express.static(__dirname + "/public"));
