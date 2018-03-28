@@ -41,12 +41,9 @@ $(function () {
             html += 'style="background-color:' + data[i][0] +'; color:"'+data[i][1]+ '"';
             html += '></li>'
         }
-        console.log(html);
         html += '</ul>';
         $colorHolder.html(html);
     });
-
-    console.log(makeErrorMsg('Hejhej'))
 
     $(document).on('click', '.colorSquare', function(event){
         if(lastTarget != undefined){

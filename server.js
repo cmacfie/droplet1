@@ -42,13 +42,11 @@ io.sockets.on('connection', function (socket) {
     //Disconnect
     socket.on('disconnect', function (data) {
         var index = users.indexOf(socket.username);
-        if (index > 0) {
+        if (index >= 0) {
             users.splice(index, 1);
             votes.splice(index, 1);
             color = usedColors.splice(index, 1);
-            if (color != '') {
-                colors.push(color);
-            }
+            colors.push(color[0]);
             updateColors();
             updateUsers();
             updateVotes();
