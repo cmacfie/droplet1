@@ -1,45 +1,45 @@
-Skulle vinna pradise hotel?
-Är troligast att göra ett könsbyte?
-Kommer att vinna OS i längdhopp?
-Är den mest lömska?
-Är den mest glömska?
-Hade högst betyg i högstadiet?
-Springer snabbast?
-Kissar i duschen?
-Använder inte deo?
-Sminkar sig bäst?
-Har snyggast klädstil?
-Är bäst på problemlösning?
-Har mest beslutsångest?
-Kan lösa en Rubiks Kub snabbast?
-Har bäst koll på skvaller?
-Kommer bli världskändis?
-Skulle passa bäst i skägg?
-Skulle passa sämst i skägg?
-Skulle vara Lucia om rummet skulle gå ett tåg?
-Kommer ha mest på kontot om 20 år?
-Är troligast att kunna slå en volt?
-Har mest positiv karma att få igen?
-Har mest negativ karma att få igen?
-Sitter mest med mobilen?
-Är mest lösaktig med pengar?
-Är bäst på tumbrottning?
-Kommer bli den roligaste föräldern?
-Somnar fortast på kvällen?
-Sover längst på söndagmorgonar?
-Skulle vara den bästa advokaten?
-Kan göra flest armhävningar?
-Kommer bli det bästa kommunalrådet?
-Gör de bästa köttbullarna?
-Skulle du ringa om duschen gått sönder?
-Har bäst musiksmak?
-Skriver bäst poesi?
-Har de minsta fötterna?
-Kommer ha högst årsinkomst om 25 år?
-Har finast ögon?
-Skriver dagbok?
-Har tjuvläst någon annans dagbok?
-Tänker först och talar sen?
-Kan flest låttexter utantill?
-Tycker du var mest intressant vid första mötet?
-Kommer att gifta sig först?
+Skulle vinna pradise hotel?;
+Är troligast att göra ett könsbyte?;
+Kommer att vinna OS i längdhopp?;
+Är den mest lömska?;
+Är den mest glömska?;
+Hade högst betyg i högstadiet?;
+Springer snabbast?;
+Kissar i duschen?;
+Använder inte deo?;
+Sminkar sig bäst?;
+Har snyggast klädstil?;
+Är bäst på problemlösning?;
+Har mest beslutsångest?;
+Kan lösa en Rubiks Kub snabbast?;
+Har bäst koll på skvaller?;
+Kommer bli världskändis?;
+Skulle passa bäst i skägg?;
+Skulle passa sämst i skägg?;
+Skulle vara Lucia om rummet skulle gå ett tåg?;
+Kommer ha mest på kontot om 20 år?;
+Är troligast att kunna slå en volt?;
+Har mest positiv karma att få igen?;
+Har mest negativ karma att få igen?;
+Sitter mest med mobilen?;
+Är mest lösaktig med pengar?;
+Är bäst på tumbrottning?;
+Kommer bli den roligaste föräldern?;
+Somnar fortast på kvällen?;
+Sover längst på söndagmorgonar?;
+Skulle vara den bästa advokaten?;
+Kan göra flest armhävningar?;
+Kommer bli det bästa kommunalrådet?;
+Gör de bästa köttbullarna?;
+Skulle du ringa om duschen gått sönder?;
+Har bäst musiksmak?;
+Skriver bäst poesi?;
+Har de minsta fötterna?;
+Kommer ha högst årsinkomst om 25 år?;
+Har finast ögon?;
+Skriver dagbok?;
+Har tjuvläst någon annans dagbok?;
+Tänker först och talar sen?;
+Kan flest låttexter utantill?;
+Tycker du var mest intressant vid första mötet?;
+Kommer att gifta sig först?;
