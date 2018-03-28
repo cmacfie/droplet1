@@ -12,7 +12,7 @@
 
     </style>
 </head>
-<body >
+<body>
 <div id="container" class="container col-md-12 col-xs-12 col-sm-12 ">
     <div id="userFormArea" class="row">
         <div class="col-md-12">
@@ -21,23 +21,25 @@
                 <input style="margin-bottom:20px" placeholder="Namn..." class="form-control" id="username"/>
             </div>
             <!--<form id="userForm">-->
-                <!--<div class="form-group">-->
-                    <!--<label>Ange Namn</label>-->
-                    <!--<input class="form-control" id="username"/>-->
-                    <!--<br/>-->
-                    <!--<input  id="loginButton" type="submit" class="btn myBtn" value="Nästa"/>-->
-                <!--</div>-->
+            <!--<div class="form-group">-->
+            <!--<label>Ange Namn</label>-->
+            <!--<input class="form-control" id="username"/>-->
+            <!--<br/>-->
+            <!--<input  id="loginButton" type="submit" class="btn myBtn" value="Nästa"/>-->
+            <!--</div>-->
             <!--</form>-->
             <label>Välj Färg</label>
             <div id="colorHolder">
                 <label id="loadingColors" style="color:grey">Laddar färger...</label>
             </div>
-            <input style="margin-top:20px"  id="loginButton" type="submit" class="btn myBtn" value="Nästa"/>
+            <input style="margin-top:20px" id="loginButton" type="submit" class="btn myBtn" value="Nästa"/>
         </div>
     </div>
 
     <div class="col-md-12 col-xs-12 col-sm-12" id="adminArea">
         <!--<div id="resetVotesButton" class="col-md-offset-4 col-md-4 col-sm-12 col-xs-12 btn myBtn">Reset Votes</div>-->
+        <div id="nextAnswerButton" class="btn myBtn">Nästa Svar</div>
+        <div id="newRoundButton" class="btn myBtn">Ny Omgång</div>
         <div id="messageArea" class="row">
             <div class="col-md-12">
                 <div id="backButton" type="button" class="btn myBtn">< Tillbaka</div>
@@ -53,18 +55,34 @@
             </div>
         </div>
         <div class="buttonHolder">
-            <div style="margin-top: 20px" type="button" id="activateOwnQuestion" class="col-md-12 col-sm-12 col-xs-12 btn myBtn">Skriv Egen Fråga</div>
-            <div style="margin-top: 20px" type="button" id="shuffleRandomQuestion" class="col-md-6 col-sm-6 col-xs-6 btn myBtn">Slumpa</div>
-            <div style="margin-top: 20px" type="button" id="useRandomQuestionButton" class="col-md-6 col-sm-6 col-xs-6 btn myBtn rotate0">Använd Slumpad</div>
+            <div style="margin-top: 20px" type="button" id="activateOwnQuestion"
+                 class="col-md-12 col-sm-12 col-xs-12 btn myBtn">Skriv Egen Fråga
+            </div>
+            <div style="margin-top: 20px" type="button" id="shuffleRandomQuestion"
+                 class="col-md-6 col-sm-6 col-xs-6 btn myBtn">Slumpa
+            </div>
+            <div style="margin-top: 20px" type="button" id="useRandomQuestionButton"
+                 class="col-md-6 col-sm-6 col-xs-6 btn myBtn rotate0">Använd Slumpad
+            </div>
         </div>
     </div>
     <div class="col-md-12 col-xs-12 col-sm-12 " id="questionArea">
-        <div class="centering">
-            <h2 id="question">Vem är troligast att ringa ding?</h2>
+        <div id="question">Fråga</div>
+    </div>
+    <div id="ownAnswerArea" class="col-md-12 col-sm-12 col-xs-12">
+        <h2>Har ej svarat:</h2><br/>
+        <div id="hasAnswered"></div>
+        <div id="textEnterArea" class="col-md-12 col-xs-12 col-sm-12">
+            <label>Svara på frågan</label><br/>
+            <textarea placeholder="Skriv text..." id="answer"
+                      class="col-md-12 col-sm-12 col-xs-12 form-control"></textarea>
+            <input id="sendAnswer" class="btn myBtn" value="Skicka" style="float:right; margin-top: 10px;"/>
         </div>
     </div>
     <div class="votingButtonHolder col-md-12 col-xs-12 col-sm-12">
     </div>
+    <a id="activateAdmin">Aktivera Admin</a>
+    <a id="disonnectAll">Disonnect All</a>
 </div>
 
 </body>

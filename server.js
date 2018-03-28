@@ -16,6 +16,13 @@ questions = [];
 questionsCounter = 0;
 currentQuestion = '';
 
+// shuffledAnswers = [];
+randomOrder = [];
+
+answers = [];
+answerCounter = 0;
+notAnsweredColors = [];
+currentAnswerer = '';
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/css', express.static(path.join(__dirname, 'public/css')));
@@ -26,10 +33,10 @@ app.get('/', function (req, res) {
     res.redirect('index.html');
     res.redirect('js/client.js');
     res.redirect('images/coffeecup.jpg');
-    res.redirect('questions.txt');
+    res.redirect('haveQuestions.txt');
 });
 
-server.listen(process.env.PORT || 80);
+server.listen(process.env.PORT || 3000);
 console.log('Server running...');
 
 app.use("/public", express.static(__dirname + "/public"));
@@ -38,8 +45,10 @@ io.sockets.on('connection', function (socket) {
     connections.push(socket);
     console.log('Connected: %s sockets connected', connections.length);
 
-    questions = createQuestionArray('questions.txt');
+    questions = createQuestionArray('haveQuestions.txt');
     shuffleArray(questions);
+
+
 
     //Disconnect
     socket.on('disconnect', function (data) {
@@ -48,6 +57,7 @@ io.sockets.on('connection', function (socket) {
             users.splice(index, 1);
             votes.splice(index, 1);
             color = usedColors.splice(index, 1);
+            notAnsweredColors = notAnsweredColors.splice(getIndex(notAnsweredColors, socket.username), 1);
             colors.push(color[0]);
             updateColors();
             updateUsers();
@@ -57,6 +67,50 @@ io.sockets.on('connection', function (socket) {
         connections.splice(connections.indexOf(socket), 1);
         console.log('Disconnected: %s sockets connceted', connections.length);
     });
+
+    socket.on('new round', function(){
+        console.log("New Round");
+        currentQuestion = '';
+        randomOrder = [];
+        votes = [];
+        answers = [];
+        answerCounter = 0
+        notAnsweredColors = [];
+        for(i = 0; i < users.length; i++){
+            votes.push(0);
+            notAnsweredColors.push([users[i], colors[i]]);
+        }
+        currentQuestion = '';
+        io.sockets.emit('new round');
+    });
+
+    socket.on('get notAnswerColors', function(){
+       io.sockets.emit('get notAnswerColors', notAnsweredColors);
+    });
+
+    socket.on('get next answer', function(){
+        getNextAnswer();
+    });
+
+    socket.on('send answer', function(username, color, answer){
+       console.log(username, color, answer);
+       answers.splice(users.indexOf(username), 0, answer);
+       var index = getIndex(notAnsweredColors, username);
+       notAnsweredColors.splice(index,1);
+       if(notAnsweredColors.length == 0){
+            randomOrder = createRandomOrder();
+           io.sockets.emit('enter guess phase');
+           getNextAnswer();
+       }
+    });
+
+    function createRandomOrder(){
+        var arr = [];
+        for(i = 0; i < users.length; i++){
+            arr.push(i);
+        }
+        return shuffleArray(arr);
+    }
 
     // Send Message
     socket.on('send message', function (data) {
@@ -90,6 +144,7 @@ io.sockets.on('connection', function (socket) {
         callback(true);
         socket.username = username;
         users.push(socket.username);
+        notAnsweredColors.push([username, color]);
         usedColors.push(color);
         var index = getIndex(colors, color[0]);
         console.log(index);
@@ -103,8 +158,18 @@ io.sockets.on('connection', function (socket) {
         updateVotes();
     });
 
-    //New Vote
-    socket.on('new vote', function (voteNbr) {
+    //Correct Vote
+    socket.on('new vote', function(userNbr){
+        console.log(userNbr, users.indexOf(currentAnswerer));
+        if(userNbr == users.indexOf(currentAnswerer)) {
+            votes[userNbr] = votes[userNbr] + 1;
+            // console.log(answers);
+            // updateVotes();
+        }
+    });
+
+    //Old Vote
+    socket.on('old vote', function (voteNbr) {
         votes[voteNbr] = votes[voteNbr] + 1;
         updateVotes();
     });
@@ -125,6 +190,18 @@ io.sockets.on('connection', function (socket) {
     socket.on('get colors', function () {
         io.sockets.emit('get colors', colors);
     });
+
+
+
+    function getNextAnswer(){
+        if(answerCounter == answers.length){
+            io.sockets.emit('enter result phase', users, answers, votes);
+        } else {
+            io.sockets.emit('get next answer', answers[randomOrder[answerCounter]], currentQuestion);
+            currentAnswerer = users[randomOrder[answerCounter]];
+            answerCounter++;
+        }
+    }
 
     function updateColors() {
         io.sockets.emit('get colors', colors);

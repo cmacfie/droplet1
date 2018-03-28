@@ -26,6 +26,13 @@ body {
     transform:rotate3d(1,0,0,90deg);
 }
 
+#textEnterArea {
+    color:white;
+    text-align:center;
+    font-size: 50px;
+    display:none;
+}
+
 #userFormArea {
     font-size:50px;
     color:white;
@@ -38,6 +45,10 @@ body {
     top:50%;
     left:50%;
     transform:translate(-50%,-50%);
+}
+
+.votingButtonHolder{
+    display:none;
 }
 
 .form-control {
@@ -62,6 +73,51 @@ body {
 
 .myBtn:hover{
     color:rgba(255,255,255,0.8);
+}
+
+#hasAnswered ul{
+    display:table;
+    width:100%;
+    padding:0;
+}
+
+#nextAnswerButton{
+    display:none;
+}
+
+#newRoundButton{
+    display:none;
+}
+
+#ownAnswerArea {
+    display:none;
+}
+
+#ownAnswerArea h2 {
+    display: inline-block;
+    max-width: 100%;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color:white;
+}
+
+.voteNumber {
+    display:none;
+    white-space: pre-wrap
+}
+
+#hasAnswered li{
+    color:white;
+    font-weight:700;
+    font-size:16px;
+    text-align:center;
+    opacity:1;
+    display:table-cell;
+    height:50px;
+    vertical-align: middle;
+    border:1px white solid;
+    border-radius:10px;
+    list-style-type: none;
 }
 
 #colorHolder ul{
