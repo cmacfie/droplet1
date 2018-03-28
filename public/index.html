@@ -13,17 +13,26 @@
     </style>
 </head>
 <body >
-<div class="container col-md-12 col-xs-12 col-sm-12 ">
+<div id="container" class="container col-md-12 col-xs-12 col-sm-12 ">
     <div id="userFormArea" class="row">
         <div class="col-md-12">
-            <form id="userForm">
-                <div class="form-group">
-                    <label>Ange Namn</label>
-                    <input class="form-control" id="username"/>
-                    <br/>
-                    <input  id="loginButton" type="submit" class="btn myBtn" value="Nästa"/>
-                </div>
-            </form>
+            <div class="form-group">
+                <label>Välj Namn</label>
+                <input style="margin-bottom:20px" placeholder="Namn..." class="form-control" id="username"/>
+            </div>
+            <!--<form id="userForm">-->
+                <!--<div class="form-group">-->
+                    <!--<label>Ange Namn</label>-->
+                    <!--<input class="form-control" id="username"/>-->
+                    <!--<br/>-->
+                    <!--<input  id="loginButton" type="submit" class="btn myBtn" value="Nästa"/>-->
+                <!--</div>-->
+            <!--</form>-->
+            <label>Välj Färg</label>
+            <div id="colorHolder">
+            </div>
+            <br/>
+            <input style="margin-top:20px"  id="loginButton" type="submit" class="btn myBtn" value="Nästa"/>
         </div>
     </div>
 

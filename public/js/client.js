@@ -15,12 +15,47 @@ $(function () {
     var $users = $('#users');
     var $username = $('#username');
     var $buttons = $('.voteButton');
+    var $colorHolder = $('#colorHolder');
+    var $colorSquares = $('.colorSquare');
 
     var hasVoted = false;
     var isAdmin = false;
     var username = '';
+    var color = '';
+
+    var loggedIn = false;
+
+    var colors = [];
+    var lastTarget;
 
     var shuffledQuestion = '';
+
+    socket.emit('get colors');
+
+    socket.on('get colors', function (data) {
+        console.log(data);
+        colors = data;
+        var html = '<ul>';
+        for (var i = 0; i < data.length; i++) {
+            html += '<li class="colorSquare"'
+            html += 'style="background-color:' + data[i][0] +'; color:"'+data[i][1]+ '"';
+            html += '></li>'
+        }
+        console.log(html);
+        html += '</ul>';
+        $colorHolder.html(html);
+    });
+
+    console.log(makeErrorMsg('Hejhej'))
+
+    $(document).on('click', '.colorSquare', function(event){
+        if(lastTarget != undefined){
+            lastTarget.css({'opacity':'', 'border':''})
+        }
+        lastTarget = $(event.target);
+        color = colors[$('.colorSquare').index(this)];
+        $(event.target).css({'opacity':'1', 'border':'2px white solid'});
+    });
 
 
     $('#resetVotesButton').click(function (event) {
@@ -97,37 +132,75 @@ $(function () {
     // });
 
     socket.on('get voteButtons', function (colors, data) {
-        if (data[0] == username) {
-            isAdmin = true;
+        console.log(colors);
+        if(loggedIn) {
+            if (data[0] == username) {
+                isAdmin = true;
+            }
+            var elem = $('.votingButtonHolder');
+            var html = '';
+            for (var i = 0; i < data.length; i++) {
+                html += '<div type="button" class="col-xs-6 col-sm-6 col-md-4 btn btn-primary voteButton" id="' + i + '"';
+                html += ' style="background-color:' + colors[i][0] + '; color: ' + colors[i][1] + '"><div>' + data[i] + '</div>';
+                html += '<div class="col-xs-12 col-sm-12 col-md-12 voteNumber">0</div>'
+                html += '</div>'
+            }
+            elem.html(html)
+            if (isAdmin) {
+                $('#adminArea').show();
+            }
+            $buttons = $('.voteButton');
         }
-        var elem = $('.votingButtonHolder');
-        var html = '';
-        for (var i = 0; i < data.length; i++) {
-            html += '<div type="button" class="col-xs-6 col-sm-6 col-md-4 btn btn-primary voteButton" id="' + i + '"';
-            html += ' style=background-color:' + colors[i % colors.length] + '><div>' + data[i] + '</div>';
-            html += '<div class="col-xs-12 col-sm-12 col-md-12 voteNumber">0</div>'
-            html += '</div>'
-        }
-        elem.html(html)
-        if (isAdmin) {
-            $('#adminArea').show();
-        }
-        $buttons = $('.voteButton');
     });
 
-    $userForm.submit(function (e) {
-        if ($username.val().length > 0) {
+
+    //User Login
+    $(document).on('click', '#loginButton', function(e){
+        if ($username.val().length > 0 && color != '') {
             e.preventDefault();
             username = $username.val();
-            socket.emit('new user', $username.val(), function (data) {
+            socket.emit('new user', $username.val(), color, function (data) {
                 if (data) {
                     $userFormArea.hide();
                     $questionArea.show();
+                    loggedIn = true;
                 }
             });
             $username.val('');
+        } else {
+            if($username.val().length == 0){
+                $('#userFormArea').prepend(makeErrorMsg('Välj ett namn'))
+            }
+            if(color == ''){
+                console.log("Färg")
+                $('#userFormArea').prepend(makeErrorMsg('Välj en färg'))
+            }
         }
-    });
+    })
+
+    // //User Login
+    // $userForm.submit(function (e) {
+    //     if ($username.val().length > 0 && color != '') {
+    //         e.preventDefault();
+    //         username = $username.val();
+    //         socket.emit('new user', $username.val(), function (data) {
+    //             if (data) {
+    //                 $userFormArea.hide();
+    //                 $questionArea.show();
+    //             }
+    //         });
+    //         $username.val('');
+    //     } else if($username.val().length == 0){
+    //         $('#container').append(makeErrorMsg('Välj ett namn'))
+    //     } else if(color == ''){
+    //         console.log("Färg")
+    //         $('#container').append(makeErrorMsg('Välj en färg'))
+    //     }
+    // });
+
+    function makeErrorMsg(msg){
+        return '<div class="alert alert-warning">'+msg+'</div>'
+    }
 
     // socket.on('get users', function (data) {
     //     var html = '';

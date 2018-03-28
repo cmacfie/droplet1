@@ -9,7 +9,9 @@ connections = [];
 nbrs = [];
 var counter = 0;
 votes = [];
-colors = ['rgba(255,0,0,0.7)', 'rgba(255,199,0,0.7)', 'rgba(134,255,0,0.7)', 'rgba(0,255,242,0.7)', 'rgba(97,0,255,0.7)', 'rgba(238,0,255,0.7)'];
+colors = [['rgba(255,0,0,0.7)', '#fff'], ['rgba(255,199,0,0.7)','#fff'], ['rgba(134,255,0,0.7)','#fff'], 
+    ['rgba(0,255,242,0.7)', '#fff'], ['rgba(97,0,255,0.7)','#fff'], ['rgba(238,0,255,0.7)','#fff'], ['rgba(0,0,0,0.7)','#fff'],['rgba(255,255,255,0.7)','#000']];
+usedColors = [];
 questions = [];
 questionsCounter = 0;
 
@@ -42,6 +44,11 @@ io.sockets.on('connection', function (socket) {
         var index = users.indexOf(socket.username);
         users.splice(index, 1);
         votes.splice(index, 1);
+        color = usedColors.splice(index, 1);
+        if (color != '') {
+            colors.push(color);
+        }
+        updateColors();
         updateUsers();
         updateVotes();
         updateVoteButtons();
@@ -57,20 +64,24 @@ io.sockets.on('connection', function (socket) {
     });
 
     //Use Question
-    socket.on('use question', function(data){
+    socket.on('use question', function (data) {
         resetVotes();
-       io.sockets.emit('new question', data);
+        io.sockets.emit('new question', data);
     });
 
     // New User
-    socket.on('new user', function (data, callback) {
+    socket.on('new user', function (username, color, callback) {
         callback(true);
-        socket.username = data;
+        socket.username = username;
         users.push(socket.username);
+        usedColors.push(color);
+        var index = colors.indexOf(color);
+        colors.splice(index, 1);
         nbrs.push([socket.username, counter]);
         votes.push(0);
         counter++;
         updateVoteButtons();
+        updateColors();
         updateUsers();
         updateVotes();
     });
@@ -83,7 +94,7 @@ io.sockets.on('connection', function (socket) {
 
     //New Random Question
     socket.on('shuffle question', function () {
-        var q = questions[questionsCounter%questions.length];
+        var q = questions[questionsCounter % questions.length];
         io.sockets.emit('new shuffled question', q);
         questionsCounter++;
     });
@@ -93,7 +104,16 @@ io.sockets.on('connection', function (socket) {
         resetVotes();
     });
 
-    function resetVotes(){
+    //Send Colors
+    socket.on('get colors', function () {
+        io.sockets.emit('get colors', colors);
+    });
+
+    function updateColors() {
+        io.sockets.emit('get colors', colors);
+    }
+
+    function resetVotes() {
         for (var i = 0; i < votes.length; i++) {
             votes[i] = 0;
         }
@@ -106,7 +126,7 @@ io.sockets.on('connection', function (socket) {
     }
 
     function updateVoteButtons() {
-        io.sockets.emit('get voteButtons', colors, users);
+        io.sockets.emit('get voteButtons', usedColors, users);
     }
 
     function updateUsers() {
@@ -135,7 +155,7 @@ io.sockets.on('connection', function (socket) {
         return array;
     }
 
-    function createQuestionArray(filename){
+    function createQuestionArray(filename) {
         questions = [];
         allQuestions = fs.readFileSync(filename, 'utf-8');
         var splitted = allQuestions.split(';');
