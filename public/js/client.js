@@ -38,7 +38,7 @@ $(function () {
         var html = '<ul>';
         for (var i = 0; i < data.length; i++) {
             html += '<li type="button" class="colorSquare"'
-            html += 'style="background-color:' + data[i][0] +'; color:"'+data[i][1]+ '"';
+            html += 'style="cursor : pointer; background-color:' + data[i][0] +'; color:"'+data[i][1]+ '"';
             html += '></li>'
         }
         if(data.indexOf(color) == -1){
