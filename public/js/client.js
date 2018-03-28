@@ -41,6 +41,9 @@ $(function () {
             html += 'style="background-color:' + data[i][0] +'; color:"'+data[i][1]+ '"';
             html += '></li>'
         }
+        if(data.indexOf(color) == -1){
+            color = '';
+        }
         html += '</ul>';
         $colorHolder.html(html);
     });
