@@ -27,32 +27,35 @@ $(function () {
         socket.emit('reset votes');
     });
 
-    $(document).on('click', '#shuffleRandomQuestion', function(event){
+    $(document).on('click', '#shuffleRandomQuestion', function (event) {
         socket.emit('shuffle question');
         $('#useRandomQuestionButton').addClass("notransform");
     });
 
-    $(document).on('click', '#useRandomQuestionButton', function(event){
-        if(shuffledQuestion != '') {
+    $(document).on('click', '#useRandomQuestionButton', function (event) {
+        if (shuffledQuestion != '') {
             socket.emit('use question', shuffledQuestion);
             $('#useRandomQuestionButton').removeClass('notransform', 300, 'linear');
         }
     });
 
-    $(document).on('click', '#activateOwnQuestion', function(event){
+    $(document).on('click', '#activateOwnQuestion', function (event) {
         $messageArea.show();
         $buttonHolder.hide();
         $questionArea.hide();
     });
 
-    $(document).on('click', '#backButton', function(event){
+    $(document).on('click', '#backButton', function (event) {
         $messageArea.hide();
         $buttonHolder.show();
         $questionArea.show();
     });
 
-    socket.on('new shuffled question', function(data){
-       shuffledQuestion = data;
+    socket.on('new shuffled question', function (data) {
+        shuffledQuestion = data;
+        if (isAdmin) {
+            $question.html(data);
+        }
     });
 
     $messageForm.submit(function (e) {
@@ -75,12 +78,12 @@ $(function () {
         hasVoted = false;
     });
 
-    socket.on('new question', function(data){
+    socket.on('new question', function (data) {
         $questionArea.addClass('rotate360');
         $("#questionArea").on(
             "transitionend MSTransitionEnd webkitTransitionEnd oTransitionEnd",
-            function() {
-                $(this).delay(300).queue(function() {  // Wait for 1 second.
+            function () {
+                $(this).delay(300).queue(function () {  // Wait for 1 second.
                     $(this).removeClass("rotate360").dequeue();
                 });
             }
