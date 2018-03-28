@@ -9,8 +9,8 @@ connections = [];
 nbrs = [];
 var counter = 0;
 votes = [];
-colors = [['rgba(255,0,0,0.7)', '#fff'], ['rgba(255,199,0,0.7)','#fff'], ['rgba(134,255,0,0.7)','#fff'], 
-    ['rgba(0,255,242,0.7)', '#fff'], ['rgba(97,0,255,0.7)','#fff'], ['rgba(238,0,255,0.7)','#fff'], ['rgba(0,0,0,0.7)','#fff'],['rgba(255,255,255,0.7)','#000']];
+colors = [['rgba(255,0,0,0.7)', '#fff'], ['rgba(255,199,0,0.7)', '#fff'], ['rgba(134,255,0,0.7)', '#fff'],
+    ['rgba(0,255,242,0.7)', '#fff'], ['rgba(97,0,255,0.7)', '#fff'], ['rgba(238,0,255,0.7)', '#fff'], ['rgba(0,0,0,0.7)', '#fff'], ['rgba(255,255,255,0.7)', '#000']];
 usedColors = [];
 questions = [];
 questionsCounter = 0;
@@ -42,16 +42,18 @@ io.sockets.on('connection', function (socket) {
     //Disconnect
     socket.on('disconnect', function (data) {
         var index = users.indexOf(socket.username);
-        users.splice(index, 1);
-        votes.splice(index, 1);
-        color = usedColors.splice(index, 1);
-        if (color != '') {
-            colors.push(color);
+        if (index > 0) {
+            users.splice(index, 1);
+            votes.splice(index, 1);
+            color = usedColors.splice(index, 1);
+            if (color != '') {
+                colors.push(color);
+            }
+            updateColors();
+            updateUsers();
+            updateVotes();
+            updateVoteButtons();
         }
-        updateColors();
-        updateUsers();
-        updateVotes();
-        updateVoteButtons();
         connections.splice(connections.indexOf(socket), 1);
         console.log('Disconnected: %s sockets connceted', connections.length);
     });
