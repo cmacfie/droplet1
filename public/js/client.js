@@ -53,7 +53,6 @@ $(function () {
 
     socket.on('new shuffled question', function(data){
        shuffledQuestion = data;
-       $question.html(data);
     });
 
     $messageForm.submit(function (e) {
@@ -66,7 +65,6 @@ $(function () {
     });
 
     $(document).on('click', '.voteButton', function (event) {
-        console.log(this.id);
         if (!hasVoted) {
             hasVoted = true;
             socket.emit('new vote', this.id);
@@ -78,7 +76,6 @@ $(function () {
     });
 
     socket.on('new question', function(data){
-        console.log(data);
         $questionArea.addClass('rotate360');
         $("#questionArea").on(
             "transitionend MSTransitionEnd webkitTransitionEnd oTransitionEnd",
@@ -99,8 +96,6 @@ $(function () {
     socket.on('get voteButtons', function (colors, data) {
         if (data[0] == username) {
             isAdmin = true;
-        } else {
-            console.log(data);
         }
         var elem = $('.votingButtonHolder');
         var html = '';
@@ -115,7 +110,6 @@ $(function () {
             $('#adminArea').show();
         }
         $buttons = $('.voteButton');
-        console.log($buttons);
     });
 
     $userForm.submit(function (e) {
@@ -141,7 +135,6 @@ $(function () {
     // });
 
     socket.on('get votes', function (data) {
-        console.log("Reset", data);
         $('.voteNumber').each(function (index) {
             $(this).text(data[index]);
         });

@@ -36,7 +36,6 @@ io.sockets.on('connection', function (socket) {
 
     questions = createQuestionArray('questions.txt');
     shuffleArray(questions);
-    console.log(questions);
 
     //Disconnect
     socket.on('disconnect', function (data) {
@@ -78,7 +77,6 @@ io.sockets.on('connection', function (socket) {
 
     //New Vote
     socket.on('new vote', function (voteNbr) {
-        console.log("voteNbr", voteNbr);
         votes[voteNbr] = votes[voteNbr] + 1;
         updateVotes();
     });
@@ -92,7 +90,6 @@ io.sockets.on('connection', function (socket) {
 
     //Reset Votes
     socket.on('reset votes', function () {
-        console.log('Reset votes');
         resetVotes();
     });
 
