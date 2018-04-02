@@ -235,7 +235,7 @@ label {
 }
 
 .green {
-    background:green;
+    background-colr:green !important;
     border-color:green;
 }
 
