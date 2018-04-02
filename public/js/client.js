@@ -145,14 +145,30 @@ $(function () {
         if (!hasVoted) {
             hasVoted = true;
             socket.emit('new vote', this.id);
+            $('.voteButton').each(function(button){
+                var isOwnTarget = false;
+                $(this).children('div').each(function(){
+                    if(event.target.id == this.id){
+                        isOwnTarget = true;
+                    }
+                });
+                if(!isOwnTarget){
+                    $(this).addClass('greyButton');
+                } else {
+                    $(this).css('border-color', 'green');
+                    $(this).css('background', 'green');
+                }
+            });
         }
     });
 
     $(document).on('click', '#activateAdmin', function (event) {
         isAdmin = true;
         if ($('#adminArea').is(':visible')) {
+            $('#ownAnswerArea').addClass('center');
             $('#adminArea').hide();
         } else {
+            $('#ownAnswerArea').removeClass('center');
             $('#adminArea').show();
         }
     })
@@ -209,6 +225,11 @@ $(function () {
                 });
             }
         );
+        $('.voteButton').each(function(button){
+            $(button).removeClass('greyButton');
+            $(this).css('border-color', 'inherit');
+            $(this).css('background', 'inherit');
+        });
     });
 
     socket.on('username taken', function () {
@@ -268,7 +289,7 @@ $(function () {
             var html = '';
             for (var i = 0; i < users.length; i++) {
                 html += '<div type="button" class="col-xs-6 col-sm-6 col-md-4 btn btn-primary voteButton" id="' + i + '"';
-                html += ' style="background-color:' + colors[i][0] + '; color: ' + colors[i][1] + '"><div id="username-' + users[i] + '">' + users[i] + '</div>';
+                html += ' style="background-color:' + colors[i][0] + '; color: ' + colors[i][1] + ';"><div id="username-' + users[i] + '">' + users[i] + '</div>';
                 html += '<div id="voteNumber-' + users[i] + '" class="col-xs-12 col-sm-12 col-md-12 voteNumber"></div>';
                 html += '<div id="answer-' + users[i] + '" class="col-xs-12 col-sm-12 col-md-12 answer"></div>';
                 html += '</div>'
