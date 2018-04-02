@@ -155,8 +155,8 @@ $(function () {
                 if(!isOwnTarget){
                     $(this).addClass('greyButton');
                 } else {
-                    $(this).css('border-color', 'green');
-                    $(this).addClass('green');
+                    $(this).css('border-color', 'blue');
+                    $(this).addClass('blue');
                 }
             });
         }
@@ -181,6 +181,11 @@ $(function () {
 
     socket.on('enter result phase', function (users, answers, votes) {
         if (!waitingForNextRound) {
+            $('.voteButton').each(function(button){
+                $(this).removeClass('greyButton');
+                $(this).css('border-color', 'inherit');
+                $(this).removeClass('blue');
+            });
             $nextAnswerButton.hide();
             $newRoundButton.show();
             $question.html('<h1 style="font-size:10vw">'+lang.result+'</h1>');
@@ -228,7 +233,7 @@ $(function () {
         $('.voteButton').each(function(button){
             $(this).removeClass('greyButton');
             $(this).css('border-color', 'inherit');
-            $(this).removeClass('green');
+            $(this).removeClass('blue');
         });
     });
 
