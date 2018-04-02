@@ -167,7 +167,7 @@ $(function () {
         if (!waitingForNextRound) {
             $nextAnswerButton.hide();
             $newRoundButton.show();
-            $question.html('<h1 style="font-size:10vw">Resultat</h1>');
+            $question.html('<h1 style="font-size:10vw">'+lang.result+'</h1>');
             // console.log(users, answers, votes);
             for (i = 0; i < users.length; i++) {
                 $('#username-' + users[i]).html(users[i])
@@ -197,8 +197,18 @@ $(function () {
         // console.log("Get Next Answer");
         hasVoted = false;
         var html = '<strong style="font-size:3vw">' + lang.question + ':</strong><p>' + question + '</p>';
-        html += '<h3>' + lang.whoAnswered + ':</h3><h2>' + answer + '</h2>';
+        html += '<div style="width:100%; border:1px white solid; height:1px"></div>'
+        html += '<strong style="font-size:3vw">' + lang.whoAnswered + ':</strong><h2>' + answer + '</h2>';
         $question.html(html);
+        $questionArea.addClass('rotate360');
+        $("#questionArea").on(
+            "transitionend MSTransitionEnd webkitTransitionEnd oTransitionEnd",
+            function () {
+                $(this).delay(300).queue(function () {  // Wait for 1 second.
+                    $(this).removeClass("rotate360").dequeue();
+                });
+            }
+        );
     });
 
     socket.on('username taken', function () {
@@ -241,7 +251,7 @@ $(function () {
                 });
             }
         );
-        $question.html('<h2>' + data + '</h2>');
+        $question.html('<h3>'+lang.question+':</h3><h2>' + data + '</h2>');
     });
 
     //
@@ -329,7 +339,7 @@ $(function () {
                 if (phase == writePhase) {
                     socket.emit('get question');
                     socket.on('get question', function (data) {
-                        $question.html('<h2>' + data + '</h2>');
+                        $question.html('<h3>'+lang.question+':</h3><h2>' + data + '</h2>');
                     });
                     enterWritePhase();
                 } else {
@@ -454,6 +464,7 @@ $(function () {
                     "next": "Next",
                     "correctGuesses" : "# of people who guessed correctly",
                     "theirAnswer": "Their answer",
+                    "result":'Result',
                 };
         } else {
                 lang = {
@@ -481,6 +492,7 @@ $(function () {
                     "next": "Nästa",
                     "correctGuesses" : "Antal som gissade rätt",
                     "theirAnswer": "Deras svar",
+                    "result":'Resultat',
                 };
         }
     }

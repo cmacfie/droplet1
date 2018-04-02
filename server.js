@@ -46,7 +46,7 @@ app.get('/', function (req, res) {
 
 lang = loadJsonFile('en');
 
-server.listen(process.env.PORT || 80);
+server.listen(process.env.PORT || 3000);
 console.log('Server running...');
 
 app.use("/public", express.static(__dirname + "/public"));
