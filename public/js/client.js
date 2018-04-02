@@ -24,6 +24,10 @@ $(function () {
     var $nextAnswerButton = $('#nextAnswerButton');
     var $newRoundButton = $('#newRoundButton');
 
+    const writePhase = "0", guessPhase = "1", resultPhase = "2";
+
+    var waitingForNextRound = false;
+
     var hasVoted = false;
     var isAdmin = false;
     var username = '';
@@ -39,19 +43,39 @@ $(function () {
     var shuffledQuestion = '';
 
 
+    // var lang = {};
+    var lang;
+    getLanguage('en');
+    setUpLanguage();
+
+    $(document).on('click', '#test', function () {
+        setUpLanguage();
+        console.log(lang);
+    })
+
 
     socket.emit('get colors');
+    socket.emit('get lang');
+
+    $(document).on('click', '.langBtn', function(event){
+       if(event.target.id == 'langBtn-en'){
+           getLanguage('en');
+       } else if(event.target.id == 'langBtn-se'){
+           getLanguage('se');
+       }
+        setUpLanguage()
+    });
 
     socket.on('get colors', function (data) {
-        console.log(data);
+        // console.log(data);
         colors = data;
         var html = '<ul>';
         for (var i = 0; i < data.length; i++) {
             html += '<li type="button" class="colorSquare"'
-            html += 'style="cursor : pointer; background-color:' + data[i][0] +'; color:"'+data[i][1]+ '"';
+            html += 'style="cursor : pointer; background-color:' + data[i][0] + '; color:"' + data[i][1] + '"';
             html += '></li>'
         }
-        if(!loggedIn && data.indexOf(color) == -1){
+        if (!loggedIn && data.indexOf(color) == -1) {
             color = '';
         }
         html += '</ul>';
@@ -59,17 +83,17 @@ $(function () {
         $colorHolder.html(html);
     });
 
-    $(document).on('click', '#disonnectAll', function(){
-       socket.emit('disconnect all');
+    $(document).on('click', '#disonnectAll', function () {
+        socket.emit('disconnect all');
     });
 
-    $(document).on('click', '.colorSquare', function(event){
-        if(lastTarget != undefined){
-            lastTarget.css({'opacity':'', 'border':''})
+    $(document).on('click', '.colorSquare', function (event) {
+        if (lastTarget != undefined) {
+            lastTarget.css({'opacity': '', 'border': ''})
         }
         lastTarget = $(event.target);
         color = colors[$('.colorSquare').index(this)];
-        $(event.target).css({'opacity':'1', 'border':'2px white solid'});
+        $(event.target).css({'opacity': '1', 'border': '2px white solid'});
     });
 
 
@@ -104,7 +128,7 @@ $(function () {
     socket.on('new shuffled question', function (data) {
         shuffledQuestion = data;
         if (isAdmin) {
-            $question.html('<h2>'+data+'</h2>');
+            $question.html('<h2>' + data + '</h2>');
         }
     });
 
@@ -124,63 +148,83 @@ $(function () {
         }
     });
 
-    $(document).on('click', '#activateAdmin', function(event){
-        if($('#adminArea').is(':visible')){
+    $(document).on('click', '#activateAdmin', function (event) {
+        isAdmin = true;
+        if ($('#adminArea').is(':visible')) {
             $('#adminArea').hide();
         } else {
             $('#adminArea').show();
         }
     })
 
-    socket.on('enter result phase', function(users, answers, votes){
-        $nextAnswerButton.hide();
-        $newRoundButton.show();
-        $question.html('<h1 style="font-size:60px">Resultat</h1>');
-        console.log(users, answers, votes);
-        for(i = 0; i < users.length; i++){
-            $('#username-' + users[i]).html(users[i])
-            $('#voteNumber-' + users[i]).html(answers[i])
-            $('#answer-' + users[i]).html(votes[i])
+
+    $(document).on('click', '#forceNewRound', function () {
+        socket.emit('new round');
+    })
+
+
+    socket.on('enter result phase', function (users, answers, votes) {
+        if (!waitingForNextRound) {
+            $nextAnswerButton.hide();
+            $newRoundButton.show();
+            $question.html('<h1 style="font-size:10vw">Resultat</h1>');
+            // console.log(users, answers, votes);
+            for (i = 0; i < users.length; i++) {
+                $('#username-' + users[i]).html(users[i])
+                $('#voteNumber-' + users[i]).html('<h3>' + lang.theirAnswer + ':</h3>' + answers[i])
+                $('#answer-' + users[i]).html('<h3>' + lang.correctGuesses + ': </h3>' + votes[i])
+            }
+            $('.voteNumber').show();
+            $('.answer').show();
         }
-        $('.voteNumber').show();
-        $('.answer').show();
     });
 
-    socket.on('enter guess phase', function(answers){
+    function enterGuessPhase() {
         $buttonHolder.hide();
         $nextAnswerButton.show();
         $ownAnswerArea.hide();
         $votingButtonHolder.show();
+        // socket.emit('get voteButtons');
+    }
+
+    socket.on('enter guess phase', function (answers) {
+        if (!waitingForNextRound) {
+            enterGuessPhase();
+        }
     });
 
-    socket.on('get next answer', function(answer, question){
-        console.log("Get Next Answer");
+    socket.on('get next answer', function (answer, question) {
+        // console.log("Get Next Answer");
         hasVoted = false;
-        var html = '<strong style="font-size:15px">Fråga:</strong><p>' + question + '</p>';
-        html+= '<h3>Vem svarade:</h3><h2>' + answer + '</h2>';
-       $question.html(html);
+        var html = '<strong style="font-size:3vw">' + lang.question + ':</strong><p>' + question + '</p>';
+        html += '<h3>' + lang.whoAnswered + ':</h3><h2>' + answer + '</h2>';
+        $question.html(html);
     });
 
-    socket.on('get notAnswerColors', function(data){
+    socket.on('username taken', function () {
+        $('#userFormArea').prepend(makeErrorMsg('Username taken'))
+    });
+
+    socket.on('get notAnswerColors', function (data) {
         var html = '<ul>';
         for (var i = 0; i < data.length; i++) {
             var txt = data[i][0];
-            if(txt.length > 7){
-                txt = txt.substr(0,4) + '...';
+            if (txt.length > 7) {
+                txt = txt.substr(0, 4) + '...';
             }
             html += '<li type="button"';
             html += 'style="cursor : pointer; background-color:' + data[i][1][0] + '"';
             html += '>' + txt + '</li>'
         }
         html += '</ul>'
-        $('#hasAnswered').html(html);
+        $('#hasNotAnswered').html(html);
     });
 
-    $(document).on('click', '#sendAnswer', function(event){
-       console.log("Send answer");
-       socket.emit('send answer', username, color, $answer.val());
-       socket.emit('get notAnswerColors');
-       $textEnterArea.hide();
+    $(document).on('click', '#sendAnswer', function (event) {
+        // console.log("Send answer");
+        socket.emit('send answer', username, color, $answer.val());
+        socket.emit('get notAnswerColors');
+        $textEnterArea.hide();
     });
 
     socket.on('voting reset', function () {
@@ -197,7 +241,7 @@ $(function () {
                 });
             }
         );
-        $question.html('<h2>'+data+'</h2>');
+        $question.html('<h2>' + data + '</h2>');
     });
 
     //
@@ -205,18 +249,18 @@ $(function () {
     //     $chat.append('<div class="well"><strong>' + data.user + '</strong>: ' + data.msg + '</div>');
     // });
 
-    socket.on('get voteButtons', function (colors, data) {
-        console.log(colors);
-        if(loggedIn) {
-            if (data[0] == username) {
-                isAdmin = true;
-            }
+    socket.on('get voteButtons', function (colors, users) {
+        // console.log("get votebuttons", colors, users);
+        if (loggedIn) {
+            // if (users[0] == username) {
+            //     isAdmin = true;
+            // }
             var html = '';
-            for (var i = 0; i < data.length; i++) {
+            for (var i = 0; i < users.length; i++) {
                 html += '<div type="button" class="col-xs-6 col-sm-6 col-md-4 btn btn-primary voteButton" id="' + i + '"';
-                html += ' style="background-color:' + colors[i][0] + '; color: ' + colors[i][1] + '"><div id="username-'+data[i]+'">' + data[i] + '</div>';
-                html += '<div id="voteNumber-'+data[i]+'" class="col-xs-12 col-sm-12 col-md-12 voteNumber"></div>';
-                html += '<div id="answer-'+data[i]+'" class="col-xs-12 col-sm-12 col-md-12 answer"></div>';
+                html += ' style="background-color:' + colors[i][0] + '; color: ' + colors[i][1] + '"><div id="username-' + users[i] + '">' + users[i] + '</div>';
+                html += '<div id="voteNumber-' + users[i] + '" class="col-xs-12 col-sm-12 col-md-12 voteNumber"></div>';
+                html += '<div id="answer-' + users[i] + '" class="col-xs-12 col-sm-12 col-md-12 answer"></div>';
                 html += '</div>'
             }
             $votingButtonHolder.html(html)
@@ -227,61 +271,80 @@ $(function () {
         }
     });
 
-    $(document).on('click', '#nextAnswerButton', function(){
-       socket.emit('get next answer');
+    $(document).on('click', '#forceGuessPhase', function(){
+       socket.emit('force guess phase')
     });
 
-    socket.on('get question', function(data){
-       if(justLoggedIn){
-           justLoggedIn = false;
-           $question.html('<h2>' + data + '</h2>');
-       }
+    $(document).on('click', '#nextAnswerButton', function () {
+        socket.emit('get next answer');
     });
 
-    $(document).on('click', '#newRoundButton', function(){
-        console.log("hej");
-       socket.emit('new round');
+    // socket.on('get question', function(data){
+    //    if(justLoggedIn){
+    //        justLoggedIn = false;
+    //        $question.html('<h2>' + data + '</h2>');
+    //    }
+    // });
+
+    $(document).on('click', '#newRoundButton', function () {
+        // console.log("hej");
+        socket.emit('new round');
     });
 
-    socket.on('new round', function(){
-        console.log("dfdfd")
-       enterWritePhase();
+    socket.on('new round', function () {
+        enterWritePhase();
     });
 
-    function enterWritePhase(){
-        $question.html('Ny Omgång')
+    function enterWritePhase() {
+        waitingForNextRound = false;
+        $question.html(lang.newRound);
         $userFormArea.hide();
         $newRoundButton.hide();
         $nextAnswerButton.hide();
         $('.voteNumber').hide();
-        $('.answer').hide();
+        // $('.answer').hide();
+        $('#answer').val('');
         $questionArea.show();
         $buttonHolder.show();
         $textEnterArea.show();
         $ownAnswerArea.show();
         $votingButtonHolder.hide();
         socket.emit('get notAnswerColors');
+        $('#waitingForRound').hide();
     }
 
     //User Login
-    $(document).on('click', '#loginButton', function(e){
+    $(document).on('click', '#loginButton', function (e) {
         if ($username.val().length > 0 && color != '') {
             e.preventDefault();
             username = $username.val();
             socket.emit('new user', $username.val(), color, function (data) {
                 if (data) {
                     loggedIn = true;
+                }
+            });
+            socket.emit('get phase');
+            socket.on('get phase', function (phase) {
+                // console.log("phase", phase);
+                if (phase == writePhase) {
                     socket.emit('get question');
+                    socket.on('get question', function (data) {
+                        $question.html('<h2>' + data + '</h2>');
+                    });
                     enterWritePhase();
+                } else {
+                    $userFormArea.hide();
+                    waitingForNextRound = true;
+                    $('.container').append('<div id="waitingForRound"><label>' + lang.waitingForNextRound + '</label></div>');
                 }
             });
             $username.val('');
         } else {
-            if($username.val().length == 0){
-                $('#userFormArea').prepend(makeErrorMsg('Välj ett namn'))
+            if ($username.val().length == 0) {
+                $('#userFormArea').prepend(makeErrorMsg(lang.pickAName))
             }
-            if(color == ''){
-                $('#userFormArea').prepend(makeErrorMsg('Välj en färg'))
+            if (color == '') {
+                $('#userFormArea').prepend(makeErrorMsg(lang.pickAColor))
             }
         }
     })
@@ -301,13 +364,13 @@ $(function () {
     //     } else if($username.val().length == 0){
     //         $('#container').append(makeErrorMsg('Välj ett namn'))
     //     } else if(color == ''){
-    //         console.log("Färg")
+    //         // console.log("Färg")
     //         $('#container').append(makeErrorMsg('Välj en färg'))
     //     }
     // });
 
-    function makeErrorMsg(msg){
-        return '<div class="alert alert-warning">'+msg+'</div>'
+    function makeErrorMsg(msg) {
+        return '<div class="alert alert-warning">' + msg + '</div>'
     }
 
     // socket.on('get users', function (data) {
@@ -324,4 +387,101 @@ $(function () {
         });
     });
 
+
+    function setUpLanguage() {
+        $('#chooseName').text(lang.chooseName);
+        $('#chooseColor').text(lang.chooseColor);
+        $('#loadingColors').text(lang.loadingColors);
+        $('#nextAnswerButton').text(lang.nextAnswer);
+        $('#newRoundButton').text(lang.newRound);
+        $('#backButton').text(lang.goBack);
+        $('#activateOwnQuestion').text(lang.writeOwnQuestion);
+        $('#shuffleRandomQuestion').text(lang.randomize);
+        $('#useRandomQuestionButton').text(lang.useRandom);
+        $('#question').text(lang.question);
+        $('#answerTheQuestion').text(lang.answerThqQuestion);
+        $('.hasNotAnsweredContainer h2').text(lang.hasNotAnswered);
+        $('#sendAnswer').val(lang.send);
+        $('#loginButton').val(lang.next);
+        $('#username').attr("placeholder", lang.name);
+        $('#useOwnQuestion').attr("placeholder", lang.writeOwnQuestion);
+        $('#answer').attr("placeholder", lang.writeText);
+    }
+
+    $(document).on('click', '#resetAll', function(){
+       socket.emit('reset all');
+    });
+
+    function getLanguage(langChoice) {
+        // var json = (function () {
+        //     var json = null;
+        //     $.ajax({
+        //         'async': false,
+        //         'global': false,
+        //         'url': "../JSON/english.json",
+        //         'dataType': "json",
+        //         'success': function (data) {
+        //             json = data;
+        //         }
+        //     });
+        //     console.log(json);
+        //     return json;
+        // })();
+        if (langChoice == 'en') {
+            console.log("hejhej");
+                lang = {
+                    "answerThqQuestion": "Answer the Question",
+                    "hasNotAnswered": "Has Not Answered",
+                    "writeText": "Write Text...",
+                    "send": "Send",
+                    "randomize": "Randomize",
+                    "useRandom": "Use Random",
+                    "writeOwnQuestion": "Write Own Question",
+                    "useQuestion": "use",
+                    "goBack": "< Go Back",
+                    "nextQuestion": "Next Question",
+                    "nextAnswer": "Next Answer",
+                    "newRound": "New Round",
+                    "chooseName": "Choose Name",
+                    "chooseColor": "Choose Color",
+                    "loadingColors": "Loading Colors...",
+                    "question":"Question",
+                    "whoAnswered": "Who Said",
+                    "pickAName":"Pick a name",
+                    "pickAColor":"Pick a color",
+                    "waitingForNextRound":"Waiting for next round",
+                    "name": "Name...",
+                    "next": "Next",
+                    "correctGuesses" : "# of people who guessed correctly",
+                    "theirAnswer": "Their answer",
+                };
+        } else {
+                lang = {
+                    "answerThqQuestion": "Svara på frågan",
+                    "hasNotAnswered": "Har inte svarat",
+                    "writeText": "Skriv text...",
+                    "send": "Skicka",
+                    "randomize": "Slumpa",
+                    "useRandom": "Använd Slumpad",
+                    "writeOwnQuestion": "Skriv egen fråga",
+                    "useQuestion": "Använd",
+                    "goBack": "< Tillbaka",
+                    "nextQuestion": "Nästa Fråga",
+                    "nextAnswer": "Nästa Svar",
+                    "newRound": "Ny Omgång",
+                    "chooseName": 'Välj Namn',
+                    "chooseColor": "Välj färg",
+                    "loadingColors": "Laddar Färger...",
+                    "question":"Fråga",
+                    "whoAnswered": "Vem svarade",
+                    "pickAName":"Välj ett namn",
+                    "pickAColor":"Välj en färg",
+                    "waitingForNextRound":"Väntar på nästa runda",
+                    "name": "Namn...",
+                    "next": "Nästa",
+                    "correctGuesses" : "Antal som gissade rätt",
+                    "theirAnswer": "Deras svar",
+                };
+        }
+    }
 });

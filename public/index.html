@@ -8,16 +8,17 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="js/client.js"></script>
     <link rel="stylesheet" href="css/style.css"/>
-    <style>
-
-    </style>
 </head>
 <body>
 <div id="container" class="container col-md-12 col-xs-12 col-sm-12 ">
+    <div class="btn-group" style="float:right">
+        <div id="langBtn-en" class="btn btn-primary langBtn">English</div>
+        <div id="langBtn-se" class="btn btn-primary langBtn">Swedish</div>
+    </div>
     <div id="userFormArea" class="row">
         <div class="col-md-12">
             <div class="form-group">
-                <label>Välj Namn</label>
+                <label id="chooseName">Välj Namn</label>
                 <input style="margin-bottom:20px" placeholder="Namn..." class="form-control" id="username"/>
             </div>
             <!--<form id="userForm">-->
@@ -28,7 +29,7 @@
             <!--<input  id="loginButton" type="submit" class="btn myBtn" value="Nästa"/>-->
             <!--</div>-->
             <!--</form>-->
-            <label>Välj Färg</label>
+            <label id="chooseColor">Välj Färg</label>
             <div id="colorHolder">
                 <label id="loadingColors" style="color:grey">Laddar färger...</label>
             </div>
@@ -37,6 +38,10 @@
     </div>
 
     <div class="col-md-12 col-xs-12 col-sm-12" id="adminArea">
+
+        <a id="forceNewRound" class="btn myBtn" style="padding:10px; line-height:3vw; height:inherit">Force new Round</a>
+        <a id="forceGuessPhase" class="btn myBtn" style="padding:10px; line-height:3vw; height:inherit; margin-left:10px">Force Guess Phase</a>
+        <a id="resetAll" class="btn myBtn" style="padding:10px; line-height:3vw; height:inherit; background:red; float:right">Reset All</a>
         <!--<div id="resetVotesButton" class="col-md-offset-4 col-md-4 col-sm-12 col-xs-12 btn myBtn">Reset Votes</div>-->
         <div id="nextAnswerButton" class="btn myBtn">Nästa Svar</div>
         <div id="newRoundButton" class="btn myBtn">Ny Omgång</div>
@@ -70,19 +75,21 @@
         <div id="question">Fråga</div>
     </div>
     <div id="ownAnswerArea" class="col-md-12 col-sm-12 col-xs-12">
-        <h2>Har ej svarat:</h2><br/>
-        <div id="hasAnswered"></div>
         <div id="textEnterArea" class="col-md-12 col-xs-12 col-sm-12">
-            <label>Svara på frågan</label><br/>
+            <label id="answerTheQuestion">Svara på frågan</label><br/>
             <textarea placeholder="Skriv text..." id="answer"
                       class="col-md-12 col-sm-12 col-xs-12 form-control"></textarea>
             <input id="sendAnswer" class="btn myBtn" value="Skicka" style="float:right; margin-top: 10px;"/>
         </div>
+        <div class="col-md-12 col-sm col-xs-12 hasNotAnsweredContainer">
+            <h2>Har ej svarat:</h2><br/>
+            <div id="hasNotAnswered"></div>
+        </div>
     </div>
     <div class="votingButtonHolder col-md-12 col-xs-12 col-sm-12">
     </div>
-    <a id="activateAdmin">Aktivera Admin</a>
-    <a id="disonnectAll">Disonnect All</a>
+    <a id="activateAdmin">Activate Admin</a>
+    <!--<a id="test">Test</a>-->
 </div>
 
 </body>

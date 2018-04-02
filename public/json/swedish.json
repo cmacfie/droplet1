@@ -1,0 +1,13 @@
+{
+  "answerThqQuestion" : "Svara på frågan",
+  "hasNotAnswered" : "Har inte svarat",
+  "writeText" : "Skriv text...",
+  "send" : "Skicka",
+  "randomize": "Slumpa",
+  "useRandom": "Använd Slumpad",
+  "writeOwnQuestion": "Skriv egen fråga",
+  "useQuestion":"Använd",
+  "goBack":"< Tillbaka",
+  "nextQuestion":"Nästa Fråga",
+  "newRound": "Ny Omgång"
+}

@@ -5,9 +5,13 @@ body {
     background-position: 100% 100%;
 }
 #messageArea {
-    margin-top: 50px;
-    margin-bottom: 50px;
     display:none;
+}
+
+#waitingForRound {
+    font-size: 3vw;
+    color:white;
+    text-align:center;
 }
 
 .voteContainer {
@@ -75,7 +79,7 @@ body {
     color:rgba(255,255,255,0.8);
 }
 
-#hasAnswered ul{
+#hasNotAnswered ul{
     display:table;
     width:100%;
     padding:0;
@@ -91,6 +95,7 @@ body {
 
 #ownAnswerArea {
     display:none;
+    padding:0;
 }
 
 #ownAnswerArea h2 {
@@ -99,6 +104,7 @@ body {
     margin-bottom: 5px;
     font-weight: bold;
     color:white;
+    margin-top:0;
 }
 
 .voteNumber {
@@ -106,7 +112,20 @@ body {
     white-space: pre-wrap
 }
 
-#hasAnswered li{
+label {
+    text-shadow: 2px 2px 4px #000;
+}
+
+.hasNotAnsweredContainer {
+    background:rgba(0,0,0,0.5);
+    padding: 20px 5px 20px 5px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    border: 1px solid white;
+    border-radius: 10px;
+}
+
+#hasNotAnswered li{
     color:white;
     font-weight:700;
     font-size:16px;
@@ -144,6 +163,7 @@ body {
 
 #adminArea {
     display:none;
+    padding:0;
     margin-bottom:25px;
 }
 #questionArea {
@@ -155,6 +175,15 @@ body {
     border: 2px white solid;
     color:white;
     margin-bottom:25px;
+}
+
+#question {
+    font-size: 3vw;
+}
+
+.col {
+    padding-left:6px;
+    padding-right: 6px;
 }
 
 #questionArea h2 {
@@ -179,10 +208,24 @@ body {
     background: rgba(255,255,255,0.3);
 }
 
+.col-sm-6, col-xs-6, col-md-6 {
+    width:calc(50% - 20px);
+    margin-left:10px;
+    margin-right:10px;
+}
+
+.col-sm-4, col-xs-4, col-md-4 {
+    width:calc(33.33% - 20px);
+    margin-left:10px;
+    margin-right:10px;
+}
+
 .voteButton {
     padding: 25px;
     font-size:50px;
     color:black;
+    border-radius:50px;
+    border:white solid 5px;
 }
 
 .voteNumber{
