@@ -2,7 +2,6 @@ body {
     background-image: url("../images/whisky.jpg");
     background-size:cover;
     height:100%;
-    font-size:3vw;
     background-position: 100% 100%;
 }
 #messageArea {
