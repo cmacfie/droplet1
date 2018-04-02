@@ -171,12 +171,7 @@ label {
     list-style-type: none;
 }
 
-.centering {
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    position:absolute;
-}
+
 
 #adminArea {
     display:none;
@@ -260,6 +255,13 @@ label {
 @media only screen and (max-width: 990px){
     .voteButton {
         margin-top: 30px;
+    }
+
+    .centering {
+        top:50%;
+        left:50%;
+        transform:translate(-50%,-50%);
+        position:absolute;
     }
 }
 
