@@ -226,9 +226,9 @@ $(function () {
             }
         );
         $('.voteButton').each(function(button){
-            $(button).removeClass('greyButton');
+            $(this).removeClass('greyButton');
             $(this).css('border-color', 'inherit');
-            $(button).removeClass('green');
+            $(this).removeClass('green');
         });
     });
 
