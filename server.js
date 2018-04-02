@@ -53,7 +53,7 @@ io.sockets.on('connection', function (socket) {
     //Disconnect
     socket.on('disconnect', function (data) {
         var index = users.indexOf(socket.username);
-        if (index >= 0) {
+        // if (index >= 0) {
             users.splice(index, 1);
             votes.splice(index, 1);
             color = usedColors.splice(index, 1);
@@ -63,7 +63,7 @@ io.sockets.on('connection', function (socket) {
             updateUsers();
             updateVotes();
             updateVoteButtons();
-        }
+        // }
         connections.splice(connections.indexOf(socket), 1);
         console.log('Disconnected: %s sockets connceted', connections.length);
     });
