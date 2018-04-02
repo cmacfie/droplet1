@@ -65,7 +65,7 @@ io.sockets.on('connection', function (socket) {
             updateVoteButtons();
         // }
         connections.splice(connections.indexOf(socket), 1);
-        console.log('Disconnected: %s sockets connceted', connections.length);
+        console.log('Disconnected: %s sockets connceted. Users: %s', connections.length, users);
     });
 
     socket.on('new round', function(){
