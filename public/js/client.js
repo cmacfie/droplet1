@@ -156,7 +156,7 @@ $(function () {
                     $(this).addClass('greyButton');
                 } else {
                     $(this).css('border-color', 'green');
-                    $(this).css('background', 'green');
+                    $(this).addClass('green');
                 }
             });
         }
@@ -228,7 +228,7 @@ $(function () {
         $('.voteButton').each(function(button){
             $(button).removeClass('greyButton');
             $(this).css('border-color', 'inherit');
-            $(this).css('background', 'inherit');
+            $(button).removeClass('green');
         });
     });
 

@@ -234,6 +234,11 @@ label {
     margin-right:10px;
 }
 
+.green {
+    background:green;
+    border-color:green;
+}
+
 .voteButton {
     padding: 25px;
     font-size:50px;
