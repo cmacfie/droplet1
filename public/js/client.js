@@ -148,11 +148,13 @@ $(function () {
             var voteNumber = this.id;
             $('.voteButton').each(function(button){
                 var isOwnTarget = false;
-                $(this).children('div').each(function(){
-                    if(event.target.id == voteNumber){
-                        isOwnTarget = true;
-                    }
-                });
+                console.log(this.id);
+                console.log($(this));
+                console.log(this.id, voteNumber);
+                if(this.id == voteNumber){
+                    console.log("true!");
+                    isOwnTarget = true;
+                }
                 if(!isOwnTarget){
                     $(this).addClass('greyButton');
                 } else {
@@ -523,7 +525,7 @@ $(function () {
                     "waitingForNextRound":"Waiting for next round",
                     "name": "Name...",
                     "next": "Next",
-                    "correctGuesses" : "# of people who guessed correctly",
+                    "correctGuesses" : "Correct Guesses",
                     "theirAnswer": "Their answer",
                     "result":'Result',
                 };
@@ -551,7 +553,7 @@ $(function () {
                     "waitingForNextRound":"Väntar på nästa runda",
                     "name": "Namn...",
                     "next": "Nästa",
-                    "correctGuesses" : "Antal som gissade rätt",
+                    "correctGuesses" : "Rättgissade",
                     "theirAnswer": "Deras svar",
                     "result":'Resultat',
                 };
