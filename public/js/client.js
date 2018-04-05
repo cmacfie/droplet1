@@ -145,10 +145,11 @@ $(function () {
         if (!hasVoted) {
             hasVoted = true;
             socket.emit('new vote', this.id);
+            var voteNumber = this.id;
             $('.voteButton').each(function(button){
                 var isOwnTarget = false;
                 $(this).children('div').each(function(){
-                    if(event.target.id == this.id){
+                    if(event.target.id == voteNumber){
                         isOwnTarget = true;
                     }
                 });
@@ -180,6 +181,7 @@ $(function () {
 
 
     socket.on('enter result phase', function (users, answers, votes) {
+        hasVoted = true;
         if (!waitingForNextRound) {
             $('.voteButton').each(function(button){
                 $(this).removeClass('greyButton');
@@ -190,15 +192,42 @@ $(function () {
             $newRoundButton.show();
             $question.html('<h1 style="font-size:10vw">'+lang.result+'</h1>');
             // console.log(users, answers, votes);
+            var html;
             for (i = 0; i < users.length; i++) {
+                var parent = document.getElementById(i);
+                $(parent).addClass('rotated0');
+                $(parent).addClass('rotated90');
+                if(users[i] == username){
+                    html = '<div class="col-md-12 col-sm-12 col-xs-12 voteButton voteButtonResult" style="background-color:'+color[0]+'; color:'+color[1]+'"> You drink ' + votes[i] + ' sips!</div>';
+                }
                 $('#username-' + users[i]).html(users[i])
                 $('#voteNumber-' + users[i]).html('<h3>' + lang.theirAnswer + ':</h3>' + answers[i])
                 $('#answer-' + users[i]).html('<h3>' + lang.correctGuesses + ': </h3>' + votes[i])
+
             }
+            addRotationToCards(0, users.length);
+            $('.votingButtonHolder').prepend(html);
             $('.voteNumber').show();
             $('.answer').show();
         }
     });
+
+    function addRotationToCards(index, finalIndex){
+        console.log("addRotation", index, finalIndex);
+        var parent = document.getElementById(index);
+        $(parent).removeClass('rotated90');
+        $(parent).on(
+            "transitionend MSTransitionEnd webkitTransitionEnd oTransitionEnd",
+            function () {
+                $(this).delay(50).queue(function () {  // Wait for 600 milliseconds.
+                    $(this).removeClass("rotated0").dequeue();
+                    if(index <= finalIndex){
+                        addRotationToCards(index+1, finalIndex);
+                    }
+                });
+            }
+        );
+    }
 
     function enterGuessPhase() {
         $buttonHolder.hide();
@@ -242,17 +271,23 @@ $(function () {
     });
 
     socket.on('get notAnswerColors', function (data) {
-        var html = '<ul>';
+        var html = '<div>';
         for (var i = 0; i < data.length; i++) {
             var txt = data[i][0];
             if (txt.length > 7) {
                 txt = txt.substr(0, 4) + '...';
             }
-            html += '<li type="button"';
-            html += 'style="cursor : pointer; background-color:' + data[i][1][0] + '"';
-            html += '>' + txt + '</li>'
+            if(i % 2 == 0){
+                html += '<div class="col-md-12 col-sm-12 col-xs-12">';
+            }
+            html += '<div class="col-md-6 col-sm-6 col-xs-6 hasNotAnsweredBox" type="button"';
+            html += 'style="background-color:' + data[i][1][0] + '"';
+            html += '>' + txt + '</div>'
+            if(i % 2 != 0){
+                html += '</div>';
+            }
         }
-        html += '</ul>'
+        html += '</div>'
         $('#hasNotAnswered').html(html);
     });
 
